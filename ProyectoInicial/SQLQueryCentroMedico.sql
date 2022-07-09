@@ -1,5 +1,5 @@
 create table Paciente(
-	idPaciente int not null,
+	idPaciente int identity(1,1) not null,
 	nombre varchar(50) not null,
 	apellido varchar(50) not null,
 	dni char(8) not null,
@@ -93,16 +93,36 @@ create table Concepto(
 	idConcepto tinyint identity(1,1) not null primary key,
 	descripcion varchar(500),
 )
+-----------------------------FOREIGNS KEYS---------------------------------------------------------------------
+alter table Paciente add foreign key (idPais) references Pais(idPais);
 
-alter table Paciente
-	add foreign key (idPais) references Pais(idPais);
+alter table TurnoPaciente add foreign key (idTurno) references Turno(idTurno);
+alter table TurnoPaciente add foreign key (idPaciente) references Paciente(idPaciente);
+alter table TurnoPaciente add foreign key (idMedico) references Medico(idMedico);
 
+alter table PagoPaciente add foreign key (idPaciente) references Paciente(idPaciente);
+alter table PagoPaciente add foreign key (idPago) references Pago(idPago);
+alter table PagoPaciente add foreign key (idTurno) references Turno(idTurno);
 
+alter table MedicoEspecialidad add foreign key (idEspecialidad) references Especialidad(idEspecialidad);
+
+alter table Turno add foreign key (estadoTurno) references TurnoEstado(idestado);
+
+alter table HistoriaPaciente add foreign key (idHistoria) references Historia(idHistoria);
+alter table HistoriaPaciente add foreign key (idPaciente) references Paciente(idPaciente);
+alter table HistoriaPaciente add foreign key (idMedico) references Medico(idMedico);
+
+alter table Pago add foreign key (concepto) references Concepto(idConcepto);
+
+alter table MedicoEspecialidad add foreign key (idMedico) references Medico(idMedico)
+-------------------------TIPO DE DATO DE USUARIO DEFINIDO-------------------------------------------------------
 create type paciente from int not null
 create type turno from int not null
 create type medico from int not null
 create type historia from int not null
 create type observacion from varchar(1000)
+----------------------------------------------------------------------------------------------------------------
+
 --ALTER TABLE medico ALTER COLUMN idMedico medico
 
 --PARA REINICIAR REGISTROS CON IDENTITY
@@ -116,6 +136,7 @@ create type observacion from varchar(1000)
 --drop table Concepto
 --drop table Historia
 --drop table HistoriaPaciente
+--drop table PagoPaciente
 --drop table MedicoEspecialidad
 --drop table Pago
 --drop table Paciente
